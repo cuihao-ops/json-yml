@@ -10,29 +10,29 @@ import (
 )
 
 type Config struct {
-	Groups []Groups `yaml:"groups"`
+	Groups []Groups //`yaml:"groups"`
 }
 
 type Groups struct {
-	Name  string  `yaml:"name"`
-	Rules []Rules `yaml:"rules"`
+	Name  string  //`yaml:"name"`
+	Rules []Rules //`yaml:"rules"`
 }
 
 type Rules struct {
-	Alert       string      `yaml:"alert"`
-	Expr        string      `yaml:"expr"`
-	For         string      `yaml:"for"`
-	Labels      Labels      `yaml:"labels"`
-	Annotations Annotations `yaml:"annotations"`
+	Alert       string      //`yaml:"alert"`
+	Expr        string      //`yaml:"expr"`
+	For         string      // `yaml:"for"`
+	Labels      Labels      //`yaml:"labels"`
+	Annotations Annotations ///`yaml:"annotations"`
 }
 
 type Labels struct {
-	Severity string `yaml:"severity"`
+	Severity string //`yaml:"severity"`
 }
 
 type Annotations struct {
-	Summary     string `yaml:"summary"`
-	Description string `yaml:"description"`
+	Summary     string //`yaml:"summary"`
+	Description string //`yaml:"description"`
 }
 
 //read yaml config
@@ -60,4 +60,13 @@ func main() {
 	}
 
 	fmt.Println(string(byts))
+
+	var s Config
+	str := []byte(`{"Groups":[{"Name":"ssl_expiry","Rules":[{"Alert":"HTTPS SSL证书到期!","Expr":"(probe_ssl_earliest_cert_expiry - time() ) / 86400 \u003c 30","For":"24h","Labels":{"Severity":"warning"},"Annotations":{"Summary":"SSL证书将要过期 (instance {{ $labels.instance }})","Description":"HTTPS SSL证书将要在{{ $value }}天过期！"}}]}]}`)
+	err = json.Unmarshal([]byte(str), &s)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(s)
+
 }
